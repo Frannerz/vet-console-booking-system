@@ -4,7 +4,7 @@
 ### Contributors:
 - Fran (github.com/Frannerz)
 - Eve (github.com/EveRefi)
-- Kate
+- Kate (github.com/sonderserendipity)
 - Norah (github.com/sialf)
 
 ### The project:

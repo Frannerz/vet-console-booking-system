@@ -8,3 +8,4 @@ class PetForm(FlaskForm):
     species = StringField("Species", validators=[DataRequired()])
     age = IntegerField("Age", validators=[DataRequired()])
     submit = SubmitField("Submit")
+

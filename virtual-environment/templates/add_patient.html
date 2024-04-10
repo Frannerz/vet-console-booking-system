@@ -17,9 +17,28 @@
   </form>
 
   <h2>Existing Patients</h2>
+
+  <table>
+    <tr>
+        <th>Pet ID</th>
+        <th>Pet Name</th>
+        <th>Species</th>
+        <th>Age</th>
+        <th>Owner</th>
+        <th>Recent Notes</th>
+    </tr>
     {% for pet in pets %}
-        <li>{{pet}}</li>
+        <tr>
+            <td>{{pet[0]}}</td>
+            <td>{{pet[1]}}</td>
+            <td>{{pet[2]}}</td>
+            <td>{{pet[3]}}</td>
+            <td>{{pet[4]}}</td>
+            <td>{{pet[5]}}</td>
+        </tr>
     {% endfor %}
+  </table>
+    
 
    <p> {{message}} </p>
 

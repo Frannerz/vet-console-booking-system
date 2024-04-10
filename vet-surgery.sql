@@ -63,7 +63,7 @@ VALUES
 (10, 'Oscar', 'Rabbit', 2);
 
 ALTER TABLE Appointments
-MODIFY COLUMN Appointment_status ENUM('Available', 'Booked') NOT NULL;
+MODIFY COLUMN Appointment_status ENUM('Available', 'Booked', 'Complete') NOT NULL;
 
 -- Monday, April 15, 2024
 INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
@@ -149,4 +149,55 @@ INSERT INTO Appointments (Date, Time, Appointment_status) VALUES
 ('2024-04-23', '15:00:00', 'Available'),
 ('2024-04-23', '15:30:00', 'Available');
 
-SELECT * FROM Appointments;
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 1 WHERE Date = '2024-04-18' AND Time = '11:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 4 WHERE Date = '2024-04-19' AND Time = '10:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 4 WHERE Date = '2024-04-17' AND Time = '10:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 9 WHERE Date = '2024-04-23' AND Time = '11:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 7 WHERE Date = '2024-04-18' AND Time = '14:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 3 WHERE Date = '2024-04-18' AND Time = '11:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 7 WHERE Date = '2024-04-17' AND Time = '14:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 2 WHERE Date = '2024-04-15' AND Time = '10:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 1 WHERE Date = '2024-04-18' AND Time = '14:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 9 WHERE Date = '2024-04-18' AND Time = '15:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 8 WHERE Date = '2024-04-15' AND Time = '15:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 4 WHERE Date = '2024-04-16' AND Time = '15:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 1 WHERE Date = '2024-04-19' AND Time = '15:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 3 WHERE Date = '2024-04-22' AND Time = '15:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 8 WHERE Date = '2024-04-17' AND Time = '11:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 2 WHERE Date = '2024-04-18' AND Time = '11:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 10 WHERE Date = '2024-04-17' AND Time = '15:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 9 WHERE Date = '2024-04-15' AND Time = '15:00:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 1 WHERE Date = '2024-04-16' AND Time = '10:30:00';
+UPDATE Appointments SET Appointment_status = 'Booked', PetID = 5 WHERE Date = '2024-04-17' AND Time = '11:00:00';
+
+-- Update appointment for PetID 4 on 2024-04-16 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Completed annual vaccination.' 
+WHERE Date = '2024-04-16' AND Time = '15:00:00';
+
+-- Update appointment for PetID 1 on 2024-04-19 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Allergy consultation and treatment.' 
+WHERE Date = '2024-04-19' AND Time = '15:00:00';
+
+-- Update appointment for PetID 9 on 2024-04-15 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Nail trimming and ear cleaning.' 
+WHERE Date = '2024-04-15' AND Time = '15:00:00';
+
+-- Update appointment for PetID 8 on 2024-04-17 at 11:30 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'General wellness check-up completed.' 
+WHERE Date = '2024-04-17' AND Time = '11:30:00';
+
+-- Update appointment for PetID 10 on 2024-04-17 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Emergency treatment for ingestion of foreign object. Follow-up required.' 
+WHERE Date = '2024-04-17' AND Time = '15:00:00';
+
+-- Update appointment for PetID 7 on 2024-04-17 at 14:30 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Behavioral consultation for anxiety. Medication prescribed.' 
+WHERE Date = '2024-04-17' AND Time = '14:30:00';

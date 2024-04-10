@@ -29,12 +29,12 @@ mysql_settings = {
     "db": "VetSurgery",
 }
 ```
-8. Create .gitignore file and ensure it contains correct files:
+7. Create .gitignore file and ensure it contains correct files:
 Add these files:
 /lib/
 config.py
 
-9. Create the database
+8. Create the database
 - Use vet-surgery.sql to create your db in mysql
 
 ### Help on db interaction:

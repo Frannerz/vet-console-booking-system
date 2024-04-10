@@ -42,7 +42,7 @@ config.py
 ### Help on db interaction:
 - https://medium.com/@connect.hashblock/creating-an-api-in-flask-with-mysql-a-step-by-step-guide-446f08722057
 - https://hevodata.com/learn/flask-mysql/
-( Add details on project setup, how users can get started, where users can get help)
+
 
 ### Screenshots
 - Checking the status

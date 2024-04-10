@@ -16,11 +16,10 @@
 ### Setup:
 1. Clone the repo using `git clone url-addess`
 2. Navigate `cd repository-name`
-3. Create your virtual environment, `python3 -m venv venv`
-4. Move into the venv folder `cd venv`
-5. Activate virtual environment, `source bin/activate`
-6. Install the dependencies: `pip install -r requirements.txt`
-7. Create config.py file:
+3. Activate virtual environment `source virtual-environment/bin/activate`
+4. Install the dependencies: `pip install -r requirements.txt`
+5. Move into the venv folder `cd virtual-environment`
+6. Create config.py file:
 - Your file should look something like this, depending on your db settings:
 ```
 mysql_settings = {

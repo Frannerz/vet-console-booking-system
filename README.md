@@ -31,8 +31,10 @@ mysql_settings = {
 ```
 7. Create .gitignore file and ensure it contains correct files:
 Add these files:
+```
 /lib/
 config.py
+```
 
 8. Create the database
 - Use vet-surgery.sql to create your db in mysql

@@ -56,10 +56,8 @@ def add_patient():
         cursor = mysql.connection.cursor()
         cursor.execute(''' INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES (%s,%s,%s,%s)''',(OwnerId,petName, species, age))
         mysql.connection.commit()
-        cursor.close()
-
+        
         # Get new pets list from database (need to edit this further)
-        cursor = mysql.connection.cursor()
         cursor.execute(''' SELECT * FROM Pets ''')
         updated = cursor.fetchall()
         cursor.close()

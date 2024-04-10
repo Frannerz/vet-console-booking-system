@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Add New Patients</h1>
+
+<form action="/add_patient" method="post">
+    {{ pet_form.hidden_tag() }} 
+    {{ pet_form.OwnerId.label }}
+    {{ pet_form.OwnerId() }}
+    {{ pet_form.petName.label }}
+    {{ pet_form.petName() }}
+    {{ pet_form.species.label }}
+    {{ pet_form.species() }}
+    {{ pet_form.age.label }}
+    {{ pet_form.age() }}
+    {{ pet_form.submit() }}
+  </form>
+
+  <h2>Existing Patients</h2>
+    {% for pet in pets %}
+        <li>{{pet}}</li>
+    {% endfor %}
+
+   <p> {{message}} </p>
+
+{% endblock %}

@@ -8,14 +8,40 @@
 - Norah (github.com/sialf)
 
 ### The project:
-What the project does
-Why the project is useful
-
+(What the project does and why it's is useful)
+- This is a vetinary practice booking system
+- It allows vet clinics to view and amend appointments  
+- It also allows them access to patient info
 
 ### Setup:
-Add details on project setup
-How users can get started with the project
-Where users can get help with your project
+1. Clone the repo using `git clone url-addess`
+2. Navigate `cd repository-name`
+3. Create your virtual environment, `python3 -m venv venv`
+4. Move into the venv folder `cd venv`
+5. Activate virtual environment, `source bin/activate`
+6. Install the dependencies: `pip install -r requirements.txt`
+7. Create config.py file:
+- Your file should look something like this, depending on your db settings:
+```
+mysql_settings = {
+    "host": "localhost",
+    "user": "root",
+    "password": "YOUR PASSWORD",
+    "db": "VetSurgery",
+}
+```
+8. Create .gitignore file and ensure it contains correct files:
+Add these files:
+/lib/
+config.py
+
+9. Create the database
+- Use vet-surgery.sql to create your db in mysql
+
+### Help on db interaction:
+- https://medium.com/@connect.hashblock/creating-an-api-in-flask-with-mysql-a-step-by-step-guide-446f08722057
+- https://hevodata.com/learn/flask-mysql/
+( Add details on project setup, how users can get started, where users can get help)
 
 ### Screenshots
 - Checking the status

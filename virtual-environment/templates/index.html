@@ -23,7 +23,8 @@
     </tr>
     {% endfor %}
 </table>
-
-
+{% if message %}
+    <p>{{message}}</p>
+{% endif %}
 
 {% endblock %}

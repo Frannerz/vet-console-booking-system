@@ -149,6 +149,43 @@ INSERT INTO Appointments (Date, Time, Appointment_status) VALUES
 ('2024-04-23', '15:00:00', 'Available'),
 ('2024-04-23', '15:30:00', 'Available');
 
+
+-- Weds, April 10, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-10', '10:00:00', 'Available'),
+('2024-04-10', '10:30:00', 'Available'),
+('2024-04-10', '11:00:00', 'Available'),
+('2024-04-10', '11:30:00', 'Available'),
+('2024-04-10', '12:00:00', 'Available'),
+('2024-04-10', '14:00:00', 'Available'),
+('2024-04-10', '14:30:00', 'Available'),
+('2024-04-10', '15:00:00', 'Available'),
+('2024-04-10', '15:30:00', 'Available');
+
+-- April 11, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-11', '10:00:00', 'Available'),
+('2024-04-11', '10:30:00', 'Available'),
+('2024-04-11', '11:00:00', 'Available'),
+('2024-04-11', '11:30:00', 'Available'),
+('2024-04-11', '12:00:00', 'Available'),
+('2024-04-11', '14:00:00', 'Available'),
+('2024-04-11', '14:30:00', 'Available'),
+('2024-04-11', '15:00:00', 'Available'),
+('2024-04-11', '15:30:00', 'Available');
+
+-- April 12, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-12', '10:00:00', 'Available'),
+('2024-04-12', '10:30:00', 'Available'),
+('2024-04-12', '11:00:00', 'Available'),
+('2024-04-12', '11:30:00', 'Available'),
+('2024-04-12', '12:00:00', 'Available'),
+('2024-04-12', '14:00:00', 'Available'),
+('2024-04-12', '14:30:00', 'Available'),
+('2024-04-12', '15:00:00', 'Available'),
+('2024-04-12', '15:30:00', 'Available');
+
 SET SQL_SAFE_UPDATES = 0;
 
 UPDATE Appointments SET Appointment_status = 'Booked', PetID = 1 WHERE Date = '2024-04-18' AND Time = '11:30:00';
@@ -201,3 +238,60 @@ WHERE Date = '2024-04-17' AND Time = '15:00:00';
 UPDATE Appointments 
 SET Appointment_status = 'Complete', Notes = 'Behavioral consultation for anxiety. Medication prescribed.' 
 WHERE Date = '2024-04-17' AND Time = '14:30:00';
+
+
+-- Update appointment for PetID 4 on 2024-04-16 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Completed annual vaccination.' 
+WHERE Date = '2024-04-10' AND Time = '15:00:00';
+
+-- Update appointment for PetID 1 on 2024-04-19 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Allergy consultation and treatment.' 
+WHERE Date = '2024-04-10' AND Time = '15:00:00';
+
+-- Update appointment for PetID 9 on 2024-04-15 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Nail trimming and ear cleaning.' 
+WHERE Date = '2024-04-11' AND Time = '15:00:00';
+
+-- Update appointment for PetID 8 on 2024-04-17 at 11:30 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'General wellness check-up completed.' 
+WHERE Date = '2024-04-11' AND Time = '11:30:00';
+
+-- Update appointment for PetID 10 on 2024-04-17 at 15:00 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Emergency treatment for ingestion of foreign object. Follow-up required.' 
+WHERE Date = '2024-04-12' AND Time = '15:00:00';
+
+-- Update appointment for PetID 7 on 2024-04-17 at 14:30 to 'Complete'
+UPDATE Appointments 
+SET Appointment_status = 'Complete', Notes = 'Behavioral consultation for anxiety. Medication prescribed.' 
+WHERE Date = '2024-04-12' AND Time = '14:30:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 2 
+WHERE Date = '2024-04-11' AND Time = '10:00:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 5 
+WHERE Date = '2024-04-11' AND Time = '11:00:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 6 
+WHERE Date = '2024-04-11' AND Time = '14:00:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 3 
+WHERE Date = '2024-04-12' AND Time = '10:30:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 7 
+WHERE Date = '2024-04-12' AND Time = '11:30:00';
+
+UPDATE Appointments 
+SET Appointment_status = 'Booked', PetID = 10 
+WHERE Date = '2024-04-12' AND Time = '14:30:00';
+
+SELECT * FROM appointments;

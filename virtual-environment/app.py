@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from config import mysql_settings as mss
 from forms import PetForm
 from utils import format_appointments
+from datetime import date
 
 app = Flask(__name__)
 
@@ -14,25 +15,37 @@ app.config['MYSQL_DB'] = mss['db']
 
 mysql = MySQL(app)
 
+def query_database(query, args=None, fetch=True):
+    result = None
+    try:
+        cursor = mysql.connection.cursor()
+        if args is not None: 
+            cursor.execute(query, args)
+        else:
+            cursor.execute(query)
+
+        mysql.connection.commit()
+        if fetch:
+            result =  cursor.fetchall()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+    finally:
+        if cursor:
+            cursor.close()
+            print('The database is now closed')
+    return result
+
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    # Pretend today is 15/4/24 (in real app this would be auto generated)
-    today = '2024-04-15'
+    today = date.today()
+    print(today)
     query = '''SELECT a.date, a.time AS 'Time', a.appointment_status AS 'Appointment Status', p.petname AS 'Pets Name', CONCAT(o.firstname, ' ', o.lastname) AS "Owner's name", o.phone AS 'Phone Number' 
     FROM Appointments a JOIN pets p ON a.petid = p.petid
     JOIN owners o ON o.ownerid = p.ownerid
-    WHERE date = %s;'''
-
-    # Query the db
-    cursor = mysql.connection.cursor()
-    cursor.execute(query, (today,))
-    appointments = cursor.fetchall()
-    cursor.close()
-
-    # use imported utils function to edit the format of appointments
-    todays_appointments = format_appointments(appointments)
-
+    WHERE date = %s
+    ORDER BY a.time;'''
+    todays_appointments = format_appointments(query_database(query, (today, )))
     return render_template("index.html", todays_appointments=todays_appointments)
 
 @app.route('/search')
@@ -53,18 +66,18 @@ def cancel():
 
 @app.route('/add_patient', methods=['GET', 'POST'])
 def add_patient():
+    # change this to owner name/email on form?
     # Query for getting pets list:
     pet_query = '''SELECT p.petid, p.petname, p.species, p.age,CONCAT(o.firstname, ' ', o.lastname) AS "Owner's name", MAX(a.notes) AS notes
                     FROM pets p 
                     JOIN owners o ON p.ownerid = o.ownerid
                     LEFT JOIN appointments a ON p.petid = a.petid
-                    GROUP BY p.petid;'''
-    # interact with database to get existing pets list
-    cursor = mysql.connection.cursor()
-    cursor.execute(pet_query)
-    pets = cursor.fetchall()
-    cursor.close()
+                    GROUP BY p.petid
+                    ORDER BY petid;'''
     
+    # interact with database to get existing pets list
+    pets = query_database(pet_query)
+
     # create instance of pet form
     pet_form = PetForm()
 
@@ -76,14 +89,12 @@ def add_patient():
         age = pet_form.age.data
 
         #  Add new pet to database
-        cursor = mysql.connection.cursor()
-        cursor.execute(''' INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES (%s,%s,%s,%s)''',(OwnerId,petName, species, age))
-        mysql.connection.commit()
-        
+        new_pet_query = '''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES (%s, %s, %s, %s)'''
+        new_pet_params = (OwnerId, petName, species, age)
+        query_database(new_pet_query, new_pet_params, fetch=False)
+
         # Get new pets list from database (need to edit this further)
-        cursor.execute(pet_query)
-        updated = cursor.fetchall()
-        cursor.close()
+        updated = query_database(pet_query)
 
         # Success message
         message = 'Patient added successfully!'

@@ -54,9 +54,8 @@ config.py
 - Adding commits with meaningful messages Opening a pull request
 - Merging and deploying to main branch
 - If needed, take screenshots of the process and add to your README file.
-<br>
-**Evidence:**
-<br>
+- 
+#### Evidence:
 <img src="https://github.com/Frannerz/Assignment-4-CFG/assets/124707247/912ad325-5f2c-4e20-b4db-5dc511904547" alt="Alt text" width="400">
 <img src="https://github.com/Frannerz/Assignment-4-CFG/assets/124707247/a8e718eb-124c-42d3-a6eb-60a286c5d4d0" alt="Alt text" width="400">
 

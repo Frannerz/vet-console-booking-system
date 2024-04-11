@@ -15,6 +15,26 @@ app.config['MYSQL_DB'] = mss['db']
 
 mysql = MySQL(app)
 
+def query_database(query, args=None, fetch=True):
+    result = None
+    try:
+        cursor = mysql.connection.cursor()
+        if args is not None: 
+            cursor.execute(query, args)
+        else:
+            cursor.execute(query)
+
+        mysql.connection.commit()
+        if fetch:
+            result =  cursor.fetchall()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+    finally:
+        if cursor:
+            cursor.close()
+            print('The database is now closed')
+    return result
+
 
 @app.route('/', methods=['GET','POST'])
 def index():
@@ -25,24 +45,8 @@ def index():
     JOIN owners o ON o.ownerid = p.ownerid
     WHERE date = %s
     ORDER BY a.time;'''
-    try:
-        # Query the db
-        cursor = mysql.connection.cursor()
-        cursor.execute(query, (today,))
-        appointments = cursor.fetchall()
-        cursor.close()
-        # use imported utils function to edit the format of appointments
-        todays_appointments = format_appointments(appointments)
-        return render_template("index.html", todays_appointments=todays_appointments)
-    except:
-        print("Failed to read data from DB")
-        message = 'Sorry, could not retrieve appointments. Please try again later.'
-        return render_template("index.html", message=message, todays_appointments=[])
-    finally:
-        if cursor:
-            cursor.close()
-            print('The database is now closed')
-
+    todays_appointments = format_appointments(query_database(query, (today, )))
+    return render_template("index.html", todays_appointments=todays_appointments)
 
 @app.route('/search')
 def search():
@@ -70,12 +74,10 @@ def add_patient():
                     LEFT JOIN appointments a ON p.petid = a.petid
                     GROUP BY p.petid
                     ORDER BY petid;'''
-    # interact with database to get existing pets list
-    cursor = mysql.connection.cursor()
-    cursor.execute(pet_query)
-    pets = cursor.fetchall()
-    cursor.close()
     
+    # interact with database to get existing pets list
+    pets = query_database(pet_query)
+
     # create instance of pet form
     pet_form = PetForm()
 
@@ -87,14 +89,12 @@ def add_patient():
         age = pet_form.age.data
 
         #  Add new pet to database
-        cursor = mysql.connection.cursor()
-        cursor.execute(''' INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES (%s,%s,%s,%s)''',(OwnerId,petName, species, age))
-        mysql.connection.commit()
-        
+        new_pet_query = '''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES (%s, %s, %s, %s)'''
+        new_pet_params = (OwnerId, petName, species, age)
+        query_database(new_pet_query, new_pet_params, fetch=False)
+
         # Get new pets list from database (need to edit this further)
-        cursor.execute(pet_query)
-        updated = cursor.fetchall()
-        cursor.close()
+        updated = query_database(pet_query)
 
         # Success message
         message = 'Patient added successfully!'

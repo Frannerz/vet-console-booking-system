@@ -17,8 +17,8 @@ mysql = MySQL(app)
 
 def query_database(query, args=None, fetch=True):
     result = None
+    cursor = mysql.connection.cursor()
     try:
-        cursor = mysql.connection.cursor()
         if args is not None: 
             cursor.execute(query, args)
         else:

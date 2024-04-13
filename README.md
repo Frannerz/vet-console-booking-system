@@ -61,4 +61,62 @@ config.py
 
 
 
-### Links to previous projects:
+### Examples of HTTP requests for each verb:
+```
+def add_new_booking(date, stylist, time, customer):
+
+    booking = {
+         "_date": date,
+         "teamMember": stylist,
+         "time": time,
+         "customer": customer,
+    }
+
+    result = requests.put(
+        'http://127.0.0.1:5000/booking',
+        headers={'content-type': 'application/json'},
+        data=json.dumps(booking)
+    )
+
+    return result.json()
+
+```
+
+
+```
+def delete_booking(booking_id):
+    result = requests.delete(
+        f'http://127.0.0.1:5000/booking/{booking_id}',
+        headers={'content-type': 'application/json'}
+    )
+    return result.json()
+```
+
+```
+def get_booking(booking_id):
+    result = requests.get(
+        f'http://127.0.0.1:5000/booking/{booking_id}',
+        headers={'content-type': 'application/json'}
+    )
+    return result.json()
+
+```
+
+```
+def add_patient(name, ownerid, species, age):
+    patient_data = {
+        "name": name,
+        "ownerid": ownerid,
+        "species": species,
+        "age": age
+    }
+
+    result = requests.post(
+        'http://127.0.0.1:5000/patients',
+        headers={'content-type': 'application/json'},
+        data=json.dumps(patient_data)
+    )
+
+    return result.json()
+
+```

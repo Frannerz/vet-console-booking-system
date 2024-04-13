@@ -32,26 +32,6 @@ def format_appointments(results):
         todays_appointments.append(new_row)
     return todays_appointments
 
-def query_database(query, args=None, fetch=True):
-    result = None
-    cursor = mysql.connection.cursor()
-    try:
-        if args is not None: 
-            cursor.execute(query, args)
-        else:
-            cursor.execute(query)
-
-        mysql.connection.commit()
-        if fetch:
-            result =  cursor.fetchall()
-    except Exception as e:
-        print(f'An error occurred: {e}')
-    finally:
-        if cursor:
-            cursor.close()
-            print('The database is now closed')
-    return result
-
 def query_db(query, fetch=True):
     result = []
     try:

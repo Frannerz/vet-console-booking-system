@@ -1,7 +1,6 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify
-from forms import PetForm
-from db_utils import format_appointments, get_todays_appointments, get_all_patient_info, add_patient_to_db
-from main import run
+from flask import Flask, request, jsonify
+from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= 'mysecret'
@@ -46,6 +45,7 @@ def add_patients():
     species = data.get('species')
     age = data.get('age')
 
+    # run the function using the request data
     result = add_patient_to_db(ownerid, petname, species, age)
 
     # Check if the patient was successfully added to the database

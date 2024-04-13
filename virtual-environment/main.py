@@ -1,6 +1,5 @@
 import requests
 import json
-from db_utils import get_todays_appointments
 
 def generate_todays_appointments():
     try:
@@ -67,9 +66,12 @@ def run():
     action = input('''What action would you like to take? 
                    \n-To book new appointment, enter 'book'
                    \n-To add new patient, enter 'add' ''')
+    # add more choices to action input
     if action == 'add':
         new_pet = get_pet_info()
         add_new_patient(new_pet[0], new_pet[1], new_pet[2], new_pet[3])
+
+    # add what to do if something else chosen
 
 if __name__ == '__main__':
     run()

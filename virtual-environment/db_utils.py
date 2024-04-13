@@ -32,16 +32,36 @@ def format_appointments(results):
         todays_appointments.append(new_row)
     return todays_appointments
 
+def query_database(query, args=None, fetch=True):
+    result = None
+    cursor = mysql.connection.cursor()
+    try:
+        if args is not None: 
+            cursor.execute(query, args)
+        else:
+            cursor.execute(query)
 
-def query_db(query):
+        mysql.connection.commit()
+        if fetch:
+            result =  cursor.fetchall()
+    except Exception as e:
+        print(f'An error occurred: {e}')
+    finally:
+        if cursor:
+            cursor.close()
+            print('The database is now closed')
+    return result
+
+def query_db(query, fetch=True):
+    result = []
     try:
         db_connection = _connect_to_db()
         cur = db_connection.cursor()
         print("Connected to DB")
         cur.execute(query)
-        result = cur.fetchall()
-        
-        return result
+        db_connection.commit()
+        if fetch:
+            result = cur.fetchall()
     except Exception as e:
         print(f"Failed to execute query: {e}")
         return None
@@ -49,6 +69,7 @@ def query_db(query):
         if db_connection:
             db_connection.close()
             print("DB connection is closed")
+    return result
 
 
 def get_todays_appointments():
@@ -87,7 +108,7 @@ def get_all_patient_info():
 
 
 def add_patient_to_db(OwnerId, petName, species, age):
-        new_pet_query = f'''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES ({OwnerId}, {petName}, {species}, {age})'''
+        new_pet_query = f'''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES ({OwnerId}, '{petName}', '{species}', {age})'''
         # Get new pets list from database (need to edit this further)
         try:
             query_db(new_pet_query)

@@ -51,7 +51,7 @@ def display_info(data):
 
 # Form for getting info about pets to add onto db
 def get_pet_info():
-    owner = input("Enter the owner id (1-10): ")
+    owner = int(input("Enter the owner id (1-10): "))
     name = input("Enter the animal's name: ")
     species = input("Enter the species of animal: ")
     age = input("Enter the animal's age: ")
@@ -70,6 +70,12 @@ def alter_booking():
 def get_owner_info():
     pass
 
+def get_action():
+    return input('''What action would you like to take? 
+            \n-To book a new appointment, enter 'book'
+            \n-To add a new patient, enter 'add' 
+            \n-To view existing patients, enter 'view' ''')
+
 
 def run():
     print('*******************************************************')
@@ -78,16 +84,27 @@ def run():
     print()
     print("**************** Today's Appointments ****************")
     display_info(generate_todays_appointments())
-    action = input('''What action would you like to take? 
-                   \n-To book new appointment, enter 'book'
-                   \n-To add new patient, enter 'add' 
-                   \n-To view existing patients, enter 'view' ''')
-    # add more choices to action input
-    if action == 'add':
-        new_pet = get_pet_info()
-        add_new_patient(new_pet[0], new_pet[1], new_pet[2], new_pet[3])
-    elif action == 'view':
-        display_info(view_pet_info())
+    action = get_action()
+    
+    while action:
+        if action == 'add':
+            new_pet = get_pet_info()
+            add_new_patient(new_pet[0], new_pet[1], new_pet[2], new_pet[3])
+            print(f'{new_pet[1]} has been added to the database!')
+            
+        elif action == 'view':
+            display_info(view_pet_info())
+        
+        elif action == 'book':
+            # Add code for booking appointments
+            pass
+        
+        else:
+            print("Invalid action. Please try again.")
+
+        action = get_action()
+        
+
 
     # add what to do if something else chosen
 

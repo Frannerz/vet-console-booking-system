@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from forms import PetForm
 from db_utils import format_appointments, get_todays_appointments, get_all_patient_info, add_patient_to_db
-
+from main import run
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= 'mysecret'
@@ -42,19 +42,19 @@ def add_patients():
     data = request.json
     # Extract relevant fields from the JSON data
     ownerid = data.get('ownerid')
-    name = data.get('name')
+    petname = data.get('name')
     species = data.get('species')
     age = data.get('age')
 
-    result = add_patient_to_db(ownerid, name, species, age)
+    result = add_patient_to_db(ownerid, petname, species, age)
 
     # Check if the patient was successfully added to the database
     if result:
-        return jsonify({"message": f"{name} successfully added to the database!"}), 200
+        return jsonify({"message": f"{petname} successfully added to the database!"}), 200
     else:
         return jsonify({"message": "Failed to add patient to the database."}), 500
 
     
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+if __name__ == "__main__":
+    app.run(port=3000, debug=True)

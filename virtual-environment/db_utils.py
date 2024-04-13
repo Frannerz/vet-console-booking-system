@@ -40,6 +40,7 @@ def query_db(query):
         print("Connected to DB")
         cur.execute(query)
         result = cur.fetchall()
+        
         return result
     except Exception as e:
         print(f"Failed to execute query: {e}")
@@ -52,7 +53,6 @@ def query_db(query):
 
 def get_todays_appointments():
     today = date.today()
-    print(today)  # Debugging statement
     todays_appointments = []
     query = f'''SELECT a.date, a.time AS 'Time', a.appointment_status AS 'Appointment Status', p.petname AS 'Pets Name', CONCAT(o.firstname, ' ', o.lastname) AS "Owner's name", o.phone AS 'Phone Number'
     FROM Appointments a JOIN pets p ON a.petid = p.petid
@@ -61,7 +61,6 @@ def get_todays_appointments():
     ORDER BY a.time;'''
     try:
         result = query_db(query)
-        print("Result:", result)  # Debugging statement
         if result:
             todays_appointments = format_appointments(result)
     except Exception as e:

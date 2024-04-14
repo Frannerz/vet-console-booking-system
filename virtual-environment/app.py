@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
-from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db
-
+from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_booking_to_db
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= 'mysecret'
@@ -16,9 +15,21 @@ def search():
     pass
 
 
-@app.route('/booking')
+@app.route('/booking', methods=['POST'])
 def booking():
-    pass
+    data = request.json
+    pet_id = data.get('pet_id')
+    date = data.get('date')
+    time = data.get('time')
+    status = data.get('appointment_status', 'Booked')
+
+    # Assuming a function exists to add the booking to the database
+    result = add_booking_to_db(pet_id, date, time, status)
+
+    if result:
+        return jsonify({"message": "Booking successfully created!"}), 200
+    else:
+        return jsonify({"message": "Failed to create booking."}), 500
 
 
 @app.route('/alter')

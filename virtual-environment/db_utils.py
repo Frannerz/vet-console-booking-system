@@ -7,15 +7,15 @@ from datetime import date
 def _connect_to_db():
     try:
         cnx = mysql.connector.connect(
-        host=mss['host'],
-        user=mss['user'],
-        password=mss['password'],
-        auth_plugin='mysql_native_password',
-        database=mss['db']
+            host=mss['host'],
+            user=mss['user'],
+            password=mss['password'],
+            auth_plugin='mysql_native_password',
+            database=mss['db']
         )
         print('DB connection successful')
         return cnx
-    except mysql.Error as e:
+    except Exception as e:
         raise Exception(f"Failed to connect to the database: {e}")
 
 # Function to format the date and time for display in appointments
@@ -57,6 +57,7 @@ def get_todays_appointments():
     JOIN owners o ON o.ownerid = p.ownerid
     WHERE date = '{today}'
     ORDER BY a.time;'''
+    db_connection = None
     try:
         db_connection = _connect_to_db()
         cur = db_connection.cursor()
@@ -67,6 +68,7 @@ def get_todays_appointments():
         cur.close()
     except Exception as e:
         print(f"Failed to get today's appointments: {e}")
+
     finally:
         if db_connection:
             db_connection.close()
@@ -99,21 +101,21 @@ def get_all_patient_info():
         if db_connection:
             db_connection.close()
             print('DB connection closed')
-    
+
 
 # Function to add new pet to database (/patients/add)
 def add_patient_to_db(OwnerId, petName, species, age):
         new_pet_query = f'''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES ({OwnerId}, '{petName}', '{species}', {age})'''
         try:
             db_connection = _connect_to_db()
-            cur = db_connection.cursor()
+            cur = db_connection.cubrsor()
             print("Connected to DB")
             cur.execute(new_pet_query)
             db_connection.commit()
             print(f'{petName} successfully add to database!')
             cur.close()
             # query_db(new_pet_query, fetch=False)
-            
+
             return True
         except Exception as e:
             print(f"Failed to add patient info: {e}")
@@ -122,5 +124,25 @@ def add_patient_to_db(OwnerId, petName, species, age):
             if db_connection:
                 db_connection.close()
                 print('DB connection closed')
-       
-   
+
+# Function to add new booking to database
+def add_booking_to_db(pet_id, date, time, status):
+    new_booking_query = f'''INSERT INTO Appointments (Date, Time, PetID, Appointment_status) 
+                        VALUES ('{date}', '{time}', {pet_id}, '{status}')'''
+    try:
+        db_connection = _connect_to_db()
+        cur = db_connection.cursor()
+        print("Connected to DB")
+        cur.execute(new_booking_query)
+        db_connection.commit()
+        print('Sucessfully added to database!')
+        cur.close()
+        return True
+    except Exception as e:
+        print(f"Failed to add booking: {e}")
+        return False
+    finally:
+        if db_connection:
+            db_connection.close()
+            print('DB connection closed')
+

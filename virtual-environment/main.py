@@ -57,9 +57,42 @@ def get_pet_info():
     age = input("Enter the animal's age: ")
     return [owner, name, species, age]
 
+# Form for getting info about booking to add onto db
+def get_booking_info():
+    pet_id = int(input("Enter the pet ID: "))
+    date = input("Enter the date for the appointment (YYYY-MM-DD): ")
+    time = input("Enter the time for the appointment (HH:MM:SS): ")
+    return pet_id, date, time
 
+
+#
 def add_new_booking():
-    pass
+    pet_id, date, time = get_booking_info()
+
+    booking_data = {
+        "pet_id": pet_id,
+        "date": date,
+        "time": time,
+        "appointment_status": "Booked"  # Assuming default status is "Booked" when creating a new booking
+    }
+# attempts to connect to json, if it can't it returns an error
+    try:
+        response = requests.post(
+            'http://127.0.0.1:3000/booking',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps(booking_data)
+        )
+        response.raise_for_status()  # Check for HTTP request errors
+        print("Booking added successfully!")
+        return response.json()  # Return the JSON response from the server
+    except requests.exceptions.RequestException as e:
+        print(f"Error adding booking: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+
+
 
 def delete_booking():
     pass
@@ -96,8 +129,7 @@ def run():
             display_info(view_pet_info())
         
         elif action == 'book':
-            # Add code for booking appointments
-            pass
+            add_new_booking()
         
         else:
             print("Invalid action. Please try again.")

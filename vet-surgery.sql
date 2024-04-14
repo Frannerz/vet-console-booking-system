@@ -4,11 +4,11 @@ USE VetSurgery;
 CREATE TABLE IF NOT EXISTS Owners 
 (
 OwnerID INT AUTO_INCREMENT,
-FirstName VARCHAR(255),
-LastName VARCHAR(255),
-Email VARCHAR(255),
-Phone VARCHAR(20),
-Address VARCHAR(255),
+FirstName VARCHAR(255) NOT NULL,
+LastName VARCHAR(255) NOT NULL,
+Email VARCHAR(255) UNIQUE,
+Phone VARCHAR(20) NOT NULL,
+Address VARCHAR(255) NOT NULL,
 PRIMARY KEY(OwnerID)
 );
 
@@ -29,7 +29,7 @@ AppointmentID INT AUTO_INCREMENT,
 Date DATE NOT NULL,
 Time TIME NOT NULL,
 PetID INT,
-Appointment_status ENUM('Available', 'Booked') NOT NULL,
+Appointment_status ENUM('Available', 'Booked', 'Complete') NOT NULL,
 Notes VARCHAR(1000),
 PRIMARY KEY(AppointmentID),
 FOREIGN KEY(PetID) REFERENCES Pets(PetID)
@@ -62,8 +62,42 @@ VALUES
 (9, 'Molly', 'Dog', 1),
 (10, 'Oscar', 'Rabbit', 2);
 
-ALTER TABLE Appointments
-MODIFY COLUMN Appointment_status ENUM('Available', 'Booked', 'Complete') NOT NULL;
+
+-- Weds, April 10, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-10', '10:00:00', 'Available'),
+('2024-04-10', '10:30:00', 'Available'),
+('2024-04-10', '11:00:00', 'Available'),
+('2024-04-10', '11:30:00', 'Available'),
+('2024-04-10', '12:00:00', 'Available'),
+('2024-04-10', '14:00:00', 'Available'),
+('2024-04-10', '14:30:00', 'Available'),
+('2024-04-10', '15:00:00', 'Available'),
+('2024-04-10', '15:30:00', 'Available');
+
+-- April 11, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-11', '10:00:00', 'Available'),
+('2024-04-11', '10:30:00', 'Available'),
+('2024-04-11', '11:00:00', 'Available'),
+('2024-04-11', '11:30:00', 'Available'),
+('2024-04-11', '12:00:00', 'Available'),
+('2024-04-11', '14:00:00', 'Available'),
+('2024-04-11', '14:30:00', 'Available'),
+('2024-04-11', '15:00:00', 'Available'),
+('2024-04-11', '15:30:00', 'Available');
+
+-- April 12, 2024
+INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
+('2024-04-12', '10:00:00', 'Available'),
+('2024-04-12', '10:30:00', 'Available'),
+('2024-04-12', '11:00:00', 'Available'),
+('2024-04-12', '11:30:00', 'Available'),
+('2024-04-12', '12:00:00', 'Available'),
+('2024-04-12', '14:00:00', 'Available'),
+('2024-04-12', '14:30:00', 'Available'),
+('2024-04-12', '15:00:00', 'Available'),
+('2024-04-12', '15:30:00', 'Available');
 
 -- Monday, April 15, 2024
 INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
@@ -150,41 +184,6 @@ INSERT INTO Appointments (Date, Time, Appointment_status) VALUES
 ('2024-04-23', '15:30:00', 'Available');
 
 
--- Weds, April 10, 2024
-INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
-('2024-04-10', '10:00:00', 'Available'),
-('2024-04-10', '10:30:00', 'Available'),
-('2024-04-10', '11:00:00', 'Available'),
-('2024-04-10', '11:30:00', 'Available'),
-('2024-04-10', '12:00:00', 'Available'),
-('2024-04-10', '14:00:00', 'Available'),
-('2024-04-10', '14:30:00', 'Available'),
-('2024-04-10', '15:00:00', 'Available'),
-('2024-04-10', '15:30:00', 'Available');
-
--- April 11, 2024
-INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
-('2024-04-11', '10:00:00', 'Available'),
-('2024-04-11', '10:30:00', 'Available'),
-('2024-04-11', '11:00:00', 'Available'),
-('2024-04-11', '11:30:00', 'Available'),
-('2024-04-11', '12:00:00', 'Available'),
-('2024-04-11', '14:00:00', 'Available'),
-('2024-04-11', '14:30:00', 'Available'),
-('2024-04-11', '15:00:00', 'Available'),
-('2024-04-11', '15:30:00', 'Available');
-
--- April 12, 2024
-INSERT INTO Appointments (Date, Time, Appointment_status) VALUES 
-('2024-04-12', '10:00:00', 'Available'),
-('2024-04-12', '10:30:00', 'Available'),
-('2024-04-12', '11:00:00', 'Available'),
-('2024-04-12', '11:30:00', 'Available'),
-('2024-04-12', '12:00:00', 'Available'),
-('2024-04-12', '14:00:00', 'Available'),
-('2024-04-12', '14:30:00', 'Available'),
-('2024-04-12', '15:00:00', 'Available'),
-('2024-04-12', '15:30:00', 'Available');
 
 SET SQL_SAFE_UPDATES = 0;
 
@@ -293,5 +292,17 @@ WHERE Date = '2024-04-12' AND Time = '11:30:00';
 UPDATE Appointments 
 SET Appointment_status = 'Booked', PetID = 10 
 WHERE Date = '2024-04-12' AND Time = '14:30:00';
+                    
+INSERT INTO Appointments (Date, Time, PetID, Appointment_status, Notes)
+VALUES ('2024-04-13', '10:00:00', 1, 'Booked', 'Annual checkup');
 
-SELECT * FROM appointments;
+INSERT INTO Appointments (Date, Time, PetID, Appointment_status, Notes)
+VALUES ('2024-04-13', '11:30:00', 5, 'Booked', 'Vaccination');
+
+INSERT INTO Appointments (Date, Time, PetID, Appointment_status, Notes)
+VALUES ('2024-04-14', '09:00:00', 2, 'Booked', 'Dental cleaning');
+
+INSERT INTO Appointments (Date, Time, PetID, Appointment_status, Notes)
+VALUES ('2024-04-14', '13:45:00', 8, 'Booked', 'Spaying surgery');
+
+

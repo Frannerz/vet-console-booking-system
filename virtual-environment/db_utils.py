@@ -188,3 +188,35 @@ def add_booking_to_db(pet_id, date, time, status):
         if db_connection:
             db_connection.close()
             print('DB connection closed')
+
+def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
+    try:
+        # Connect to the database
+        db_connection = _connect_to_db()
+        cursor = db_connection.cursor()
+
+        # Construct and execute the UPDATE query to cancel the appointment
+        appointment_update_query = '''UPDATE appointments 
+                                      SET appointment_status = 'Available', 
+                                          PetID = NULL, 
+                                          notes = NULL 
+                                      WHERE date = %s 
+                                      AND time = %s
+                                      AND appointment_status = 'Booked'
+                                      AND PetID = %s'''
+        cursor.execute(appointment_update_query, (appointment_date, appointment_time, pet_ID))
+        db_connection.commit()
+
+        # Check if any rows were affected
+        if cursor.rowcount > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error during deletion: {e}")
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()

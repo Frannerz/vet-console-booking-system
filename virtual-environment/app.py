@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db
+from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db, delete_appointment_from_db
 
 
 app = Flask(__name__)
@@ -38,9 +38,23 @@ def alter():
     pass
 
 
-@app.route('/cancel')
-def cancel():
-    pass
+@app.route('/delete', methods=['POST'])
+def delete_appointment():
+    data = request.json
+    appointment_date = data.get('appointment_date')
+    appointment_time = data.get('appointment_time')
+    pet_ID = data.get('pet_ID')
+
+    result = delete_appointment_from_db(appointment_date, appointment_time, pet_ID)
+# If function works then showcase what has been deleted
+    if result:
+        return jsonify({"message": f"Appointment cancelled",
+                        "appointment_date": appointment_date,
+                        "appointment_time": appointment_time,
+                        "pet_ID": pet_ID}), 200
+    else:
+        return jsonify({"message": "Failed to cancel appointment. Appointment not found or already cancelled."}), 404
+
 
 
 @app.route('/patients', methods=['GET', 'POST'])
@@ -93,3 +107,5 @@ def owners():
 
 if __name__ == "__main__":
     app.run(port=3000, debug=True)
+
+

@@ -70,18 +70,18 @@ def add_patients():
 def add_owners():
     data = request.json
     # Extract relevant fields from the JSON data
-    firstName = data.get('firstName')
-    lastName = data.get('lastName')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
     email = data.get('email')
     phone = data.get('phone')
     address = data.get('address')
 
     # run the function using the request data
-    result = add_owner_to_db(firstName, lastName, email, phone, address)
+    result = add_owner_to_db(first_name, last_name, email, phone, address)
 
     # Check if the patient was successfully added to the database
     if result:
-        return jsonify({"message": f"{firstName} {lastName} successfully added to the database!"}), 200
+        return jsonify({"message": f"{first_name} {last_name} successfully added to the database!"}), 200
     else:
         return jsonify({"message": "Failed to add patient to the database."}), 500
 

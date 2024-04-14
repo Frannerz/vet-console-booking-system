@@ -124,8 +124,51 @@ def add_patient_to_db(OwnerId, petName, species, age):
             if db_connection:
                 db_connection.close()
                 print('DB connection closed')
+       
+# Function to add owner info to db
+def add_owner_to_db(firstName, lastName, email, phone, address):
+        new_owner_query = f'''INSERT INTO owners (firstname, lastname, email, phone, address) VALUES ('{firstName}', '{lastName}', '{email}', '{phone}', '{address}' )'''
+        try:
+            db_connection = _connect_to_db()
+            cur = db_connection.cursor()
+            print("Connected to DB")
+            cur.execute(new_owner_query)
+            db_connection.commit()
+            print(f'{firstName} {lastName} successfully add to database!')
+            cur.close()
+            # query_db(new_pet_query, fetch=False)
+            
+            return True
+        except Exception as e:
+            print(f"Failed to add owner info: {e}")
+            return False
+        finally:
+            if db_connection:
+                db_connection.close()
+                print('DB connection closed')
 
-# Function to add new booking to database
+# Function to get ownerid
+def get_owner_info(email):
+    id_query = f"""SELECT * FROM owners
+                WHERE email = '{email}';"""  
+    try:
+        db_connection = _connect_to_db()
+        cur = db_connection.cursor()
+        print("Connected to DB")
+        cur.execute(id_query)
+        info = cur.fetchall()
+        cur.close()
+        return info
+    except Exception as e:
+        print(f"Failed to get owner info: {e}")
+        return []
+    finally:
+        if db_connection:
+            db_connection.close()
+            print('DB connection closed')
+
+
+    # Function to add new booking to database
 def add_booking_to_db(pet_id, date, time, status):
     new_booking_query = f'''INSERT INTO Appointments (Date, Time, PetID, Appointment_status) 
                         VALUES ('{date}', '{time}', {pet_id}, '{status}')'''
@@ -145,4 +188,3 @@ def add_booking_to_db(pet_id, date, time, status):
         if db_connection:
             db_connection.close()
             print('DB connection closed')
-

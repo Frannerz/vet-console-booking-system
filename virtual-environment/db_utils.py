@@ -104,15 +104,15 @@ def get_all_patient_info():
 
 
 # Function to add new pet to database (/patients/add)
-def add_patient_to_db(OwnerId, petName, species, age):
-        new_pet_query = f'''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES ({OwnerId}, '{petName}', '{species}', {age})'''
+def add_patient_to_db(owner_id, pet_name, species, age):
+        new_pet_query = f'''INSERT INTO Pets (OwnerID, PetName, Species, Age) VALUES ({owner_id}, '{pet_name}', '{species}', {age})'''
         try:
             db_connection = _connect_to_db()
             cur = db_connection.cubrsor()
             print("Connected to DB")
             cur.execute(new_pet_query)
             db_connection.commit()
-            print(f'{petName} successfully add to database!')
+            print(f'{pet_name} successfully add to database!')
             cur.close()
             # query_db(new_pet_query, fetch=False)
 
@@ -126,15 +126,15 @@ def add_patient_to_db(OwnerId, petName, species, age):
                 print('DB connection closed')
        
 # Function to add owner info to db
-def add_owner_to_db(firstName, lastName, email, phone, address):
-        new_owner_query = f'''INSERT INTO owners (firstname, lastname, email, phone, address) VALUES ('{firstName}', '{lastName}', '{email}', '{phone}', '{address}' )'''
+def add_owner_to_db(first_name, last_name, email, phone, address):
+        new_owner_query = f'''INSERT INTO owners (firstname, lastname, email, phone, address) VALUES ('{first_name}', '{last_name}', '{email}', '{phone}', '{address}' )'''
         try:
             db_connection = _connect_to_db()
             cur = db_connection.cursor()
             print("Connected to DB")
             cur.execute(new_owner_query)
             db_connection.commit()
-            print(f'{firstName} {lastName} successfully add to database!')
+            print(f'{first_name} {last_name} successfully add to database!')
             cur.close()
             # query_db(new_pet_query, fetch=False)
             

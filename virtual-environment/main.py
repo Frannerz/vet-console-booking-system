@@ -16,10 +16,10 @@ def generate_todays_appointments():
 def search_by_date():
     pass
 
-def add_new_patient(ownerid, name, species, age):
+def add_new_patient(owner_id, name, species, age):
     patient_data = {
         "name": name,
-        "ownerid": ownerid,
+        "owner_id": owner_id,
         "species": species,
         "age": age
     }
@@ -51,10 +51,10 @@ def view_pet_info():
         print(f"Error: {e}")
         return None
 
-def add_new_owner(firstname, lastname, email, phone, address):
+def add_new_owner(first_name, last_name, email, phone, address):
     owner_data = {
-        "firstName": firstname,
-        "lastName": lastname,
+        "first_name": first_name,
+        "last_name": last_name,
         "email": email,
         "phone": phone,
         "address": address
@@ -88,10 +88,6 @@ def view_owner(email):
         print(f"Error: {e}")
         return None
 
-# basic display for now, need to improve this!
-def display_info(data):
-    for item in data:
-        print(item, '\n')
 
 
 
@@ -103,7 +99,7 @@ def get_booking_info():
     return pet_id, date, time
 
 
-#
+
 def add_new_booking():
     pet_id, date, time = get_booking_info()
 
@@ -113,7 +109,7 @@ def add_new_booking():
         "time": time,
         "appointment_status": "Booked"  # Assuming default status is "Booked" when creating a new booking
     }
-# attempts to connect to json, if it can't it returns an error
+    # attempts post request, if it can't it returns an error
     try:
         response = requests.post(
             'http://127.0.0.1:3000/booking',
@@ -138,45 +134,78 @@ def delete_booking():
 def alter_booking():
     pass
 
+# basic display for now, need to improve this!
+def display_info(data):
+    for line in data:
+        for item in line:
+            print(f"{item:<15}", end='')
+        print('\n')
 
 
 def get_action():
-    return input('''What action would you like to take? 
+    return input('''\n**** What action would you like to take? ****
             \n-To book a new appointment, enter 'book'
             \n-To add a new patient, enter 'add' 
             \n-To view existing patients, enter 'view'
-            \n-To exit, enter 'exit' \n ''')
+            \n-To exit, enter 'exit' 
+            \n > ''')
+
+appointment_headers = ['Date', 'Time', 'Status', 'Pet Name', 'Owner', 'Contact']
+
+def print_headers(headers):
+    for title in headers:
+        print(f"{title:<15}", end='')
+    print('\n')
+
+# Function to create welcome message, includes calculations for length of stars
+def welcome_message():
+    star='*'
+    total_length = 100
+
+    # create welcome message
+    text_length = len(" Hello, welcome to the veterinary practice booking system! ")
+    padding_length = (total_length - text_length) // 2
+    print(f'''\n{star*total_length}\n{' '*padding_length}{'Hello, welcome to the veterinary practice booking system!'}{' '*padding_length}\n{star*total_length}\n''')
+    
+    # create title for today's appointments
+    text_length = len("Today's Appointments")
+    stars_length = (total_length - text_length) // 2
+    print(f"{star*stars_length} Today's Appointments {star*stars_length}\n")
 
 
 def run():
-    print('*******************************************************')
-    print('Hello, welcome to the vetinary practice booking system!')
-    print('*******************************************************')
-    print()
-    print("**************** Today's Appointments ****************")
+    # Print welcome messages and today's appointments
+    welcome_message()
+    print_headers(appointment_headers)
     display_info(generate_todays_appointments())
+    
     action = get_action()
     
     while action:
         if action == 'add':
-            check_if_owner = input("Is the owner in our database? Type 'y' or 'n': ")
+            check_if_owner = input("""Is the owner in our database? Type 'y' or 'n'\n > """)
             if check_if_owner == 'y':
                 # get owners id using their email
                 email = input("Enter the customer's email address: ")
-                ownerid = view_owner(email)[0][0]
+                owner_id = view_owner(email)[0][0]
+
                 # add new pet to system
-                new_pet = get_pet_info(ownerid)
+                new_pet = get_pet_info(owner_id)
                 add_new_patient(new_pet[0], new_pet[1], new_pet[2], new_pet[3])
                 print(f'{new_pet[1]} has been added to the database!')
+            
             elif check_if_owner == 'n':
                 # get new owner info
                 new_owner = get_owner_info()
+
                 # add new owner to db
                 add_new_owner(new_owner[0],new_owner[1],new_owner[2],new_owner[3],new_owner[4])
                 print(f'{new_owner[0]} {new_owner[1]} has been added to the system\n')
-                new_owner_id = view_owner(new_owner[2])[0][0]
+                
                 # get info for the new pet
+                new_owner_id = view_owner(new_owner[2])[0][0]
                 new_pet = get_pet_info(new_owner_id)
+                
                 # add new pet to db
                 add_new_patient(new_owner_id, new_pet[1], new_pet[2], new_pet[3])
                 print(f'{new_pet[1]} has been added to the database!')
@@ -196,11 +225,10 @@ def run():
         else:
             print("Invalid action. Please try again.")
 
+        # Once the user have finished, print the initial question again 
         action = get_action()
         
 
-
-    # add what to do if something else chosen
 
 if __name__ == '__main__':
     run()

@@ -220,3 +220,5 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
             cursor.close()
         if db_connection:
             db_connection.close()
+
+            

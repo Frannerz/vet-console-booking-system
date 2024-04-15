@@ -160,6 +160,8 @@ def alter_booking():
 def display_info(data):
     for line in data:
         for item in line:
+            if item is None:
+                item = ""
             print(f"{item:<15}", end='')
         print('\n')
 
@@ -169,12 +171,12 @@ def get_action():
             \n-To book a new appointment, enter 'book'
             \n-To add a new patient, enter 'add' 
             \n-To view existing patients, enter 'view'
+            \n-To cancel an appointment, enter 'cancel'
             \n-To exit, enter 'exit' 
-            \n To cancel an appointment, enter 'cancel'
             \n > ''')
 
 appointment_headers = ['Date', 'Time', 'Status', 'Pet Name', 'Owner', 'Contact']
-
+pet_headers = ['Pet id', 'Name', 'Animal', 'Age', 'Owner', 'Recent Notes']
 def print_headers(headers):
     for title in headers:
         print(f"{title:<15}", end='')
@@ -235,6 +237,7 @@ def run():
     
                 
         elif action == 'view':
+            print_headers(pet_headers)
             display_info(view_pet_info())
 
             

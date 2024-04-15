@@ -1,5 +1,6 @@
 import requests
 import json
+from db_utils import delete_appointment_from_db
 
 def generate_todays_appointments():
     try:
@@ -126,6 +127,27 @@ def add_new_booking():
         print(f"Unexpected error: {e}")
         return None
 
+def delete_booking_request(pet_ID, appointment_date, appointment_time):
+    # Prepare the data to be sent in the request
+    data = {
+        'pet_ID': pet_ID,
+        'appointment_date': appointment_date,
+        'appointment_time': appointment_time
+    }
+
+    try:
+        # Make a POST request to the server
+        result = requests.post(
+            'http://127.0.0.1:3000/delete',
+            headers={'content-type': 'application/json'},
+            data=json.dumps(data)
+        )
+        # Return the JSON response from the server
+        return result.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error during request: {e}")
+        return None
+
 
 
 def delete_booking():
@@ -138,6 +160,8 @@ def alter_booking():
 def display_info(data):
     for line in data:
         for item in line:
+            if item is None:
+                item = ""
             print(f"{item:<15}", end='')
         print('\n')
 
@@ -147,11 +171,12 @@ def get_action():
             \n-To book a new appointment, enter 'book'
             \n-To add a new patient, enter 'add' 
             \n-To view existing patients, enter 'view'
+            \n-To cancel an appointment, enter 'cancel'
             \n-To exit, enter 'exit' 
             \n > ''')
 
 appointment_headers = ['Date', 'Time', 'Status', 'Pet Name', 'Owner', 'Contact']
-
+pet_headers = ['Pet id', 'Name', 'Animal', 'Age', 'Owner', 'Recent Notes']
 def print_headers(headers):
     for title in headers:
         print(f"{title:<15}", end='')
@@ -212,11 +237,24 @@ def run():
     
                 
         elif action == 'view':
+            print_headers(pet_headers)
             display_info(view_pet_info())
 
             
         elif action == 'book':
             add_new_booking()
+        
+        elif action == 'cancel':
+            # Get information for appointment to cancel
+            pet_ID = input('Enter PetID: ')
+            appointment_date = input('Enter appointment date (YYYY-MM-DD): ')
+            appointment_time = input('Enter appointment time (HH:MM): ')
+            # Call the delete_booking_request function to delete the appointment
+            cancel_result = delete_appointment_from_db(appointment_date, appointment_time, pet_ID)
+            if cancel_result:
+                print('Booking deleted')
+            else:
+                print('Failed to delete booking. Please try again.')
         
         elif action == 'exit':
             print('Goodbye')
@@ -232,3 +270,5 @@ def run():
 
 if __name__ == '__main__':
     run()
+
+    

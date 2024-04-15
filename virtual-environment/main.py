@@ -149,10 +149,6 @@ def delete_booking_request(pet_ID, appointment_date, appointment_time):
         return None
 
 
-
-def delete_booking():
-    pass
-
 def get_alter_info():
     appointment_id = input("Enter the booking id number: ")
     new_date = input("Enter the new date you want to book using this format (YYYY-MM-DD): ")

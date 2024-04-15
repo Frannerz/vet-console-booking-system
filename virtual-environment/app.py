@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db, delete_appointment_from_db
+from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db, delete_appointment_from_db, amend_booking_in_db
 
 
 app = Flask(__name__)
@@ -37,6 +37,23 @@ def booking():
 def alter():
     pass
 
+@app.route('/booking/<int:appointment_id>', methods=['PUT'] )
+def amend_booking(appointment_id):
+    data = request.json
+    new_date = data.get('new_date')
+    new_time = data.get('new_time')
+    notes = data.get('notes')
+    # status = data.get('appointment_status', 'Booked')
+    # appointment_id = data.get('appointment_id')
+
+    result = amend_booking_in_db(appointment_id, new_date, new_time, notes)
+
+    # Check if the appointment was successfully amended in the database
+
+    if result:
+        return jsonify({"message": f"Appointment {appointment_id} successfully amended!"}), 200
+    else:
+        return jsonify({"message": "Failed to amend appointment."}), 500
 
 @app.route('/delete', methods=['POST'])
 def delete_appointment():

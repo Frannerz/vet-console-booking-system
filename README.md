@@ -22,17 +22,8 @@
 - It contains a list of pip-installable packages with their versions, ensuring consistent environments across different setups.
 - You can generate it using `pip freeze` and install from it using `pip install -r requirements.txt`
 5. Move into the venv folder `cd virtual-environment`
-6. Create config.py file:
-- Your file should look something like this, depending on your db settings:
-```
-mysql_settings = {
-    "host": "localhost",
-    "user": "root",
-    "password": "YOUR PASSWORD",
-    "db": "VetSurgery",
-}
-```
-7. Create .gitignore file and ensure it contains correct files:
+6. Update config.py file in accordance to your MySQL set-up.
+7. Open the .gitignore file and ensure it contains correct files:
 Add these files:
 ```
 /lib/

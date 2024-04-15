@@ -221,4 +221,25 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
         if db_connection:
             db_connection.close()
 
-            
+def amend_booking_in_db(appointment_id, new_date, new_time, notes):
+    try:
+        # Connect to the database
+        db_connection = _connect_to_db()
+        cursor = db_connection.cursor()
+
+        # Construct and execute the UPDATE query to amend the booking
+        appointment_update_query = f'''UPDATE Appointments 
+                                          SET Date = '{new_date}', Time = '{new_time}', Notes = '{notes}' 
+                                          WHERE AppointmentID = {appointment_id}'''
+        
+        cursor.execute(appointment_update_query)
+        db_connection.commit()
+        
+        cursor.close()
+        print('Appointment updated')
+    except Exception as e:   #there is an error here...
+        print(f"Error during amendment: {e}")
+        return False
+    finally:  
+        if db_connection:
+            db_connection.close()

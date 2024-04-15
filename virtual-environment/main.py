@@ -153,8 +153,35 @@ def delete_booking_request(pet_ID, appointment_date, appointment_time):
 def delete_booking():
     pass
 
-def alter_booking():
-    pass
+def get_alter_info():
+    appointment_id = input("Enter the booking id number: ")
+    new_date = input("Enter the new date you want to book using this format (YYYY-MM-DD): ")
+    new_time = input("Enter the date using this format (HH:MM:SS): ")
+    notes = input("Reason for appointment: ")
+    return [appointment_id, new_date, new_time, notes]
+
+def alter_booking(appointment_id, new_date, new_time, notes):
+    new_booking_data = {
+        "appointment_id": appointment_id,
+        "new_date": new_date,
+        "new_time": new_time,
+        "appointment_status": "Booked",
+        "notes": notes
+    }
+    try:
+        response = requests.put(
+            f'http://127.0.1:3000/booking/{appointment_id}',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps(new_booking_data)
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error amending booking: {e}")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 # basic display for now, need to improve this!
 def display_info(data):
@@ -172,6 +199,7 @@ def get_action():
             \n-To add a new patient, enter 'add' 
             \n-To view existing patients, enter 'view'
             \n-To cancel an appointment, enter 'cancel'
+            \n To amend an existent appointment, enter 'amend' 
             \n-To exit, enter 'exit' 
             \n > ''')
 
@@ -255,6 +283,11 @@ def run():
                 print('Booking deleted')
             else:
                 print('Failed to delete booking. Please try again.')
+        
+        elif action == 'amend':
+            details = get_alter_info()
+            alter_booking(*details) 
+            print('Appointment amended')
         
         elif action == 'exit':
             print('Goodbye')

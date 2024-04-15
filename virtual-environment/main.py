@@ -154,7 +154,31 @@ def delete_booking():
     pass
 
 def alter_booking():
-    pass
+    appointment_id = input("Enter the booking id number: ")
+    new_date = input("Enter the new date you want to book using this format (YYYY-MM-DD): ")
+    new_time = input("Enter the date using this format (HH:MM:SS): ")
+    notes = input("Reason for appointment: ")
+    new_booking_data = {
+        "appointment_id": appointment_id,
+        "date": new_date,
+        "time": new_time,
+        "appointment_status": "Booked",
+        "notes": notes
+    }
+    try:
+        response = requests.put(
+            'http://127.0.0:3000/booking/<int:appointment_id>',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps(new_booking_data)
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error amending booking: {e}")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 # basic display for now, need to improve this!
 def display_info(data):
@@ -171,6 +195,7 @@ def get_action():
             \n-To view existing patients, enter 'view'
             \n-To exit, enter 'exit' 
             \n To cancel an appointment, enter 'cancel'
+            \n To amend an existent appointment, enter 'amend' 
             \n > ''')
 
 appointment_headers = ['Date', 'Time', 'Status', 'Pet Name', 'Owner', 'Contact']
@@ -252,6 +277,9 @@ def run():
                 print('Booking deleted')
             else:
                 print('Failed to delete booking. Please try again.')
+
+        elif action == 'amend':
+            alter_booking()
         
         elif action == 'exit':
             print('Goodbye')

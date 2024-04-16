@@ -28,27 +28,7 @@ def format_appointments(results):
         todays_appointments.append(new_row)
     return todays_appointments
 
-# Function to query the db- not working properly atm!!!
-# def query_db(query, fetch = True):
-#     result = []
-#     try:
-#         db_connection = _connect_to_db()
-#         cur = db_connection.cursor()
-#         print("Connected to DB")
-#         cur.execute(query)
-#         db_connection.commit()
-#         if fetch:
-#             cur.fetchall()
-#     except Exception as e:
-#         print(f"Failed to execute query: {e}")
-#         return None
-#     finally:
-#         if db_connection:
-#             db_connection.close()
-#             print("DB connection is closed")
-#     return result
-
-# Function to query db and get appointments for today ('/')
+# Function to get booked appointments for today
 def get_todays_appointments():
     today = date.today()
     todays_appointments = []
@@ -57,7 +37,33 @@ def get_todays_appointments():
     JOIN owners o ON o.ownerid = p.ownerid
     WHERE date = '{today}'
     ORDER BY a.time;'''
-    db_connection = None
+    # db_connection = None
+    try:
+        db_connection = _connect_to_db()
+        cur = db_connection.cursor()
+        print("Connected to DB")
+        cur.execute(query)
+        result = cur.fetchall()
+        todays_appointments = format_appointments(result)
+        cur.close()
+    except Exception as e:
+        print(f"Failed to get today's appointments: {e}")
+
+    finally:
+        if db_connection:
+            db_connection.close()
+            print('DB connection closed')
+    return todays_appointments
+
+# Function to get appointments by date
+def get_appointments_by_date(chosen_date):
+    chosen_date = chosen_date
+    todays_appointments = []
+    query = f'''SELECT a.date, a.time AS 'Time', a.appointment_status AS 'Appointment Status', p.petname AS 'Pets Name', CONCAT(o.firstname, ' ', o.lastname) AS "Owner's name", o.phone AS 'Phone Number'
+    FROM Appointments a LEFT JOIN pets p ON a.petid = p.petid
+    LEFT JOIN owners o ON o.ownerid = p.ownerid
+    WHERE date = '{chosen_date}'
+    ORDER BY a.time;'''
     try:
         db_connection = _connect_to_db()
         cur = db_connection.cursor()
@@ -168,10 +174,12 @@ def get_owner_info(email):
             print('DB connection closed')
 
 
-    # Function to add new booking to database
-def add_booking_to_db(pet_id, date, time, status):
-    new_booking_query = f'''INSERT INTO Appointments (Date, Time, PetID, Appointment_status) 
-                        VALUES ('{date}', '{time}', {pet_id}, '{status}')'''
+# Function to add new booking to database
+def add_booking_to_db(pet_id, date, time, notes):
+    new_booking_query = f'''UPDATE Appointments
+                            SET appointment_status = "Booked", petid = {pet_id}, notes = "{notes}"
+                            WHERE date = "{date}" and time = "{time}"'''
+
     try:
         db_connection = _connect_to_db()
         cur = db_connection.cursor()
@@ -189,6 +197,8 @@ def add_booking_to_db(pet_id, date, time, status):
             db_connection.close()
             print('DB connection closed')
 
+
+# Function to cancel appointment
 def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
     try:
         # Connect to the database
@@ -221,13 +231,12 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
         if db_connection:
             db_connection.close()
 
+# Fundation to amend bookings
 def amend_booking_in_db(appointment_id, new_date, new_time, notes):
     try:
-        # Connect to the database
         db_connection = _connect_to_db()
         cursor = db_connection.cursor()
 
-        # Construct and execute the UPDATE query to amend the booking
         appointment_update_query = f'''UPDATE Appointments 
                                           SET Date = '{new_date}', Time = '{new_time}', Notes = '{notes}' 
                                           WHERE AppointmentID = {appointment_id}'''
@@ -237,7 +246,7 @@ def amend_booking_in_db(appointment_id, new_date, new_time, notes):
         
         cursor.close()
         print('Appointment updated')
-    except Exception as e:   #there is an error here...
+    except Exception as e:  
         print(f"Error during amendment: {e}")
         return False
     finally:  

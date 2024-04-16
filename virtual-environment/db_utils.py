@@ -189,13 +189,15 @@ def add_booking_to_db(pet_id, date, time, status):
             db_connection.close()
             print('DB connection closed')
 
+
+# Function to cancel appointment
 def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
     try:
         # Connect to the database
         db_connection = _connect_to_db()
         cursor = db_connection.cursor()
 
-        # Construct and execute the UPDATE query to cancel the appointment
+        # Construct and execute the UPDATE query to cancel the appointment and make cancelled appointment avalible to book
         appointment_update_query = '''UPDATE appointments 
                                       SET appointment_status = 'Available', 
                                           PetID = NULL, 
@@ -212,8 +214,19 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
             return True
         else:
             return False
+# Exception handling for different kinds of common error
+    except ValueError as ve:
+        print(f'ValueError occurred: {ve}')
+        return False
+    except TypeError as te:
+        print(f'TypeError occured: {te}')
+        return False
+    except FileNotFoundError as file_not_found:
+        print(f'FileNotFoundError occured: {file_not_found}')
+        return False
     except Exception as e:
-        print(f"Error during deletion: {e}")
+# For all other exception 
+        print(f'Error occured: {e}')
         return False
     finally:
         if cursor:

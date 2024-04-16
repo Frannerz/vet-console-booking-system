@@ -219,14 +219,14 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
         print(f'ValueError occurred: {ve}')
         return False
     except TypeError as te:
-        print(f'TypeError occured: {te}')
+        print(f'TypeError occurred: {te}')
         return False
     except FileNotFoundError as file_not_found:
-        print(f'FileNotFoundError occured: {file_not_found}')
+        print(f'FileNotFoundError occurred: {file_not_found}')
         return False
     except Exception as e:
 # For all other exception 
-        print(f'Error occured: {e}')
+        print(f'Error occurred: {e}')
         return False
     finally:
         if cursor:

@@ -229,9 +229,6 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
     except TypeError as te:
         print(f'TypeError occurred: {te}')
         return False
-    except FileNotFoundError as file_not_found:
-        print(f'FileNotFoundError occurred: {file_not_found}')
-        return False
     except Exception as e:
 # For all other exception 
         print(f'Error occurred: {e}')

@@ -239,7 +239,7 @@ def delete_appointment_from_db(appointment_date, appointment_time, pet_ID):
         if db_connection:
             db_connection.close()
 
-# Fundation to amend bookings
+# Function to amend bookings
 def amend_booking_in_db(appointment_id, new_date, new_time, notes):
     try:
         db_connection = _connect_to_db()

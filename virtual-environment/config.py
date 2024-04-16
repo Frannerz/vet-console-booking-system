@@ -3,6 +3,6 @@ mysql_settings = {
     "host": "localhost",
     "user": "root",
     # Please change password to the password for your MySQL account
-    "password": "Puravida.1",
+    "password": "password",
     "db": "VetSurgery",
 }

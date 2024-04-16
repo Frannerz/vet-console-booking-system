@@ -1,50 +1,42 @@
 from flask import Flask, request, jsonify
-from db_utils import get_todays_appointments, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db, delete_appointment_from_db, amend_booking_in_db
-
+from db_utils import get_todays_appointments, get_appointments_by_date, get_all_patient_info, add_patient_to_db, add_owner_to_db, get_owner_info, add_booking_to_db, delete_appointment_from_db, amend_booking_in_db
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= 'mysecret'
 
+# Index route displays today's appointments
 @app.route('/', methods=['GET', 'POST'])
 def index():
     res = get_todays_appointments()
     return jsonify(res)
 
-
-@app.route('/search')
-def search():
-    pass
-
-
+# Booking route adds a new booking
 @app.route('/booking', methods=['POST'])
 def booking():
     data = request.json
     pet_id = data.get('pet_id')
     date = data.get('date')
     time = data.get('time')
-    status = data.get('appointment_status', 'Booked')
-
-    # Assuming a function exists to add the booking to the database
-    result = add_booking_to_db(pet_id, date, time, status)
-
+    notes = data.get('notes')
+    result = add_booking_to_db(pet_id, date, time, notes)
     if result:
         return jsonify({"message": "Booking successfully created!"}), 200
     else:
         return jsonify({"message": "Failed to create booking."}), 500
 
+# Route to view bookings by date
+@app.route('/booking/<chosen_date>')
+def appointments_by_date(chosen_date):
+    res = get_appointments_by_date(chosen_date)
+    return jsonify(res)
 
-@app.route('/alter')
-def alter():
-    pass
-
+# Route to amend an existing booking
 @app.route('/booking/<int:appointment_id>', methods=['PUT'] )
 def amend_booking(appointment_id):
     data = request.json
     new_date = data.get('new_date')
     new_time = data.get('new_time')
     notes = data.get('notes')
-    # status = data.get('appointment_status', 'Booked')
-    # appointment_id = data.get('appointment_id')
 
     result = amend_booking_in_db(appointment_id, new_date, new_time, notes)
 
@@ -55,6 +47,7 @@ def amend_booking(appointment_id):
     else:
         return jsonify({"message": "Failed to amend appointment."}), 500
 
+# Route to cancel an existing booking
 @app.route('/delete', methods=['POST'])
 def delete_appointment():
     data = request.json
@@ -73,12 +66,13 @@ def delete_appointment():
         return jsonify({"message": "Failed to cancel appointment. Appointment not found or already cancelled."}), 404
 
 
-
+# Route to view patient info
 @app.route('/patients', methods=['GET', 'POST'])
 def patients():
     pets= get_all_patient_info()
     return jsonify(pets)
 
+# Route for adding a new patient
 @app.route('/patients/add/', methods=['POST'])
 def add_patients():
     data = request.json
@@ -97,10 +91,10 @@ def add_patients():
     else:
         return jsonify({"message": "Failed to add patient to the database."}), 500
 
+# Route for adding a new owner
 @app.route('/owners/add', methods=['GET', 'POST'])   
 def add_owners():
     data = request.json
-    # Extract relevant fields from the JSON data
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     email = data.get('email')
@@ -116,6 +110,7 @@ def add_owners():
     else:
         return jsonify({"message": "Failed to add patient to the database."}), 500
 
+# Route for getting owner's info
 @app.route('/owners')
 def owners():
     email = request.args.get('email')

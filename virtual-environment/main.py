@@ -2,6 +2,7 @@ import requests
 import json
 from db_utils import delete_appointment_from_db
 
+# Function to get today's appointments
 def generate_todays_appointments():
     try:
         result = requests.get('http://127.0.0.1:3000')
@@ -14,9 +15,7 @@ def generate_todays_appointments():
         print(f"Error: {e}")
         return None
 
-def search_by_date():
-    pass
-
+# Function to add patient information
 def add_new_patient(owner_id, name, species, age):
     patient_data = {
         "name": name,
@@ -24,13 +23,11 @@ def add_new_patient(owner_id, name, species, age):
         "species": species,
         "age": age
     }
-
     result = requests.post(
         'http://127.0.0.1:3000/patients/add',
         headers={'content-type': 'application/json'},
         data=json.dumps(patient_data)
     )
-
     return result.json()
 
 # Form for getting info about pets to add onto db
@@ -40,6 +37,7 @@ def get_pet_info(ownerid):
     age = input("Enter the animal's age: ")
     return [ownerid, name, species, age]
 
+# Function to view patient information
 def view_pet_info():
     try:
         response = requests.get('http://127.0.0.1:3000/patients')
@@ -52,6 +50,7 @@ def view_pet_info():
         print(f"Error: {e}")
         return None
 
+# Function to add new owner info
 def add_new_owner(first_name, last_name, email, phone, address):
     owner_data = {
         "first_name": first_name,
@@ -60,7 +59,6 @@ def add_new_owner(first_name, last_name, email, phone, address):
         "phone": phone,
         "address": address
         }
-
     result = requests.post(
         'http://127.0.0.1:3000/owners/add',
         headers={'content-type': 'application/json'},
@@ -77,6 +75,7 @@ def get_owner_info():
     address = input("Enter the owner's address: ")
     return [first_name, last_name, email, phone, address]
 
+# Function to get owner's info
 def view_owner(email):
     try:
         result = requests.get('http://127.0.0.1:3000/owners', params={'email': email})
@@ -89,7 +88,19 @@ def view_owner(email):
         print(f"Error: {e}")
         return None
 
-
+# View bookings by date
+def view_bookings_by_date():
+    chosen_date = input('Enter a date to see available appointments (YYYY-MM-DD):')
+    try:
+        result = requests.get(f'http://127.0.0.1:3000/booking/{chosen_date}')
+        result.raise_for_status()  # Raise an exception for bad status codes
+        return result.json()  # Decode JSON response
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching appointments: {e}")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 
 # Form for getting info about booking to add onto db
@@ -97,18 +108,19 @@ def get_booking_info():
     pet_id = int(input("Enter the pet ID: "))
     date = input("Enter the date for the appointment (YYYY-MM-DD): ")
     time = input("Enter the time for the appointment (HH:MM:SS): ")
-    return pet_id, date, time
+    notes = input("Ener the reason for the booking: ")
+    return pet_id, date, time, notes
 
 
-
+# Function to add a new booking
 def add_new_booking():
-    pet_id, date, time = get_booking_info()
+    pet_id, date, time, notes = get_booking_info()
 
     booking_data = {
         "pet_id": pet_id,
         "date": date,
         "time": time,
-        "appointment_status": "Booked"  # Assuming default status is "Booked" when creating a new booking
+        "notes": notes,
     }
     # attempts post request, if it can't it returns an error
     try:
@@ -127,6 +139,7 @@ def add_new_booking():
         print(f"Unexpected error: {e}")
         return None
 
+# Function to delete a booking
 def delete_booking_request(pet_ID, appointment_date, appointment_time):
     # Prepare the data to be sent in the request
     data = {
@@ -148,7 +161,7 @@ def delete_booking_request(pet_ID, appointment_date, appointment_time):
         print(f"Error during request: {e}")
         return None
 
-
+# Function to get information to amend appointments
 def get_alter_info():
     appointment_id = input("Enter the booking id number: ")
     new_date = input("Enter the new date you want to book using this format (YYYY-MM-DD): ")
@@ -156,6 +169,7 @@ def get_alter_info():
     notes = input("Reason for appointment: ")
     return [appointment_id, new_date, new_time, notes]
 
+# Function to amend existing appointments
 def alter_booking(appointment_id, new_date, new_time, notes):
     new_booking_data = {
         "appointment_id": appointment_id,
@@ -179,7 +193,7 @@ def alter_booking(appointment_id, new_date, new_time, notes):
         print(f"Error: {e}")
         return None
 
-# basic display for now, need to improve this!
+# Function for displaying tables
 def display_info(data):
     for line in data:
         for item in line:
@@ -188,7 +202,7 @@ def display_info(data):
             print(f"{item:<15}", end='')
         print('\n')
 
-
+# Function to use in run function to get user action
 def get_action():
     return input('''\n**** What action would you like to take? ****
             \n-To book a new appointment, enter 'book'
@@ -199,8 +213,11 @@ def get_action():
             \n-To exit, enter 'exit' 
             \n > ''')
 
+# header variables
 appointment_headers = ['Date', 'Time', 'Status', 'Pet Name', 'Owner', 'Contact']
 pet_headers = ['Pet id', 'Name', 'Animal', 'Age', 'Owner', 'Recent Notes']
+
+# Function to display headers
 def print_headers(headers):
     for title in headers:
         print(f"{title:<15}", end='')
@@ -266,6 +283,9 @@ def run():
 
             
         elif action == 'book':
+            bookings_by_date = view_bookings_by_date()
+            print_headers(appointment_headers)
+            display_info(bookings_by_date)
             add_new_booking()
         
         elif action == 'cancel':
